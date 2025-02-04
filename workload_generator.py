@@ -136,45 +136,6 @@ def create_and_display_plots(results: List[WorkloadResult]):
     plt.tight_layout()
     plt.show()
 
-def display_results_table(results: List[WorkloadResult]):
-    html = """
-    <table border="1" style="width:100%">
-    <tr>
-        <th>Requests</th>
-        <th>Total Time (s)</th>
-        <th>Throughput (req/s)</th>
-        <th>Avg Calc Time (s)</th>
-        <th>Success Rate (%)</th>
-        <th>Min Latency (s)</th>
-        <th>Max Latency (s)</th>
-        <th>Median Latency (s)</th>
-    </tr>
-    """
-
-    for r in results:
-        if r.latencies:
-            min_lat = f"{min(r.latencies):.2f}"
-            max_lat = f"{max(r.latencies):.2f}"
-            med_lat = f"{statistics.median(r.latencies):.2f}"
-        else:
-            min_lat = max_lat = med_lat = "N/A"
-
-        html += f"""
-        <tr>
-            <td>{r.request_count}</td>
-            <td>{r.total_time:.2f}</td>
-            <td>{r.throughput:.2f}</td>
-            <td>{r.avg_calculation_time:.2f}</td>
-            <td>{r.success_rate*100:.1f}</td>
-            <td>{min_lat}</td>
-            <td>{max_lat}</td>
-            <td>{med_lat}</td>
-        </tr>
-        """
-
-    html += "</table>"
-    display(HTML(html))
-
 def main():
     setup_logging()
     logging.info("Starting performance tests")
@@ -188,9 +149,6 @@ def main():
         print(f"Completed {count} requests: "
               f"Throughput: {result.throughput:.2f} req/s, "
               f"Success Rate: {result.success_rate*100:.1f}%")
-
-    print("\nDetailed Results:")
-    display_results_table(results)
 
     print("\nPerformance Plots:")
     create_and_display_plots(results)
